@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Меню | Ресторант</title>
+  <style>
+    body { margin: 0; font-family: sans-serif; background: #f5f5f5; color: #333; }
+    .container { max-width: 960px; margin: auto; padding: 20px; }
+    header { background: #036; color: white; padding: 20px 0; text-align: center; }
+    h1 { margin: 0; font-size: 28px; }
+
+    .lang-select { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin: 30px 0; }
+    .lang-select button {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 20px; font-size: 16px; border: none; border-radius: 5px; background: #024; color: #fff;
+      cursor: pointer; transition: background 0.3s;
+    }
+    .lang-select button img {
+      width: 24px; height: 16px; border-radius: 2px;
+    }
+    .lang-select button:hover { background: #036; }
+
+    .menu-links { display: none; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 30px; }
+    .menu-links a {
+      display: inline-block; padding: 12px 18px; background: white; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-decoration: none; color: #036; font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+      .lang-select button, .menu-links a { font-size: 14px; padding: 10px 15px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Изберете език / Select Language</h1>
+  </header>
+  <div class="container">
+    <div class="lang-select">
+      <button onclick="showMenu('bg')"><img src="images/flags/bg.png" alt="BG"> Български</button>
+      <button onclick="showMenu('en')"><img src="images/flags/gb.png" alt="EN"> English</button>
+      <button onclick="showMenu('uk')"><img src="images/flags/ua.png" alt="UA"> Українська</button>
+      <button onclick="showMenu('de')"><img src="images/flags/de.png" alt="DE"> Deutsch</button>
+      <button onclick="showMenu('tr')"><img src="images/flags/tr.png" alt="TR"> Türkçe</button>
+      <button onclick="showMenu('fr')"><img src="images/flags/fr.png" alt="FR"> Français</button>
+      <button onclick="showMenu('ru')"><img src="images/flags/ru.png" alt="RU"> Русский</button>
+    </div>
+
+    <div id="menu-links" class="menu-links"></div>
+  </div>
+
+  <script>
+const translations = {
+  bg: [
+    { label: "Салати", file: "salati.html" },
+    { label: "Супи / Аламинути", file: "supi.html" },
+    { label: "Основни ястия", file: "osnovni.html" },
+    { label: "Риба / Гарнитури", file: "riba.html" },
+    { label: "Скара", file: "skara.html" },
+    { label: "Хляб и сосове", file: "hlyab.html" },
+    { label: "Десерти", file: "deserti.html" },
+    { label: "Безалкохолни напитки", file: "bezalkoholni.html" },
+    { label: "Алкохолни напитки", file: "alkoholni.html" },
+    { label: "Коктейли", file: "kokteyli.html" }
+  ],
+  en: [
+    { label: "Salads", file: "salati_en.html" },
+    { label: "Soups / Quick Meals", file: "supi_en.html" },
+    { label: "Main Dishes", file: "osnovni_en.html" },
+    { label: "Fish / Side Dishes", file: "riba_en.html" },
+    { label: "Grill", file: "skara_en.html" },
+    { label: "Bread & Sauces", file: "hlyab_en.html" },
+    { label: "Desserts", file: "deserti_en.html" },
+    { label: "Soft Drinks", file: "bezalkoholni_en.html" },
+    { label: "Alcoholic Drinks", file: "alkoholni_en.html" },
+    { label: "Cocktails", file: "kokteyli_en.html" }
+  ],
+  uk: [
+    { label: "Салати", file: "salati_uk.html" },
+    { label: "Супи / Аламінути", file: "supi_uk.html" },
+    { label: "Основні страви", file: "osnovni_uk.html" },
+    { label: "Риба / Гарніри", file: "riba_uk.html" },
+    { label: "Смажене", file: "skara_uk.html" },
+    { label: "Хліб і соуси", file: "hlyab_uk.html" },
+    { label: "Десерти", file: "deserti_uk.html" },
+    { label: "Безалкогольні напої", file: "bezalkoholni_uk.html" },
+    { label: "Алкогольні напої", file: "alkoholni_uk.html" },
+    { label: "Коктейлі", file: "kokteyli_uk.html" }
+  ],
+  de: [
+    { label: "Salate", file: "salati_de.html" },
+    { label: "Suppen / Snacks", file: "supi_de.html" },
+    { label: "Hauptgerichte", file: "osnovni_de.html" },
+    { label: "Fisch / Beilagen", file: "riba_de.html" },
+    { label: "Grill", file: "skara_de.html" },
+    { label: "Brot & Soßen", file: "hlyab_de.html" },
+    { label: "Desserts", file: "deserti_de.html" },
+    { label: "Alkoholfreie Getränke", file: "bezalkoholni_de.html" },
+    { label: "Alkoholische Getränke", file: "alkoholni_de.html" },
+    { label: "Cocktails", file: "kokteyli_de.html" }
+  ],
+  tr: [
+    { label: "Salatalar", file: "salati_tr.html" },
+    { label: "Çorbalar / Atıştırmalıklar", file: "supi_tr.html" },
+    { label: "Ana Yemekler", file: "osnovni_tr.html" },
+    { label: "Balık / Garnitürler", file: "riba_tr.html" },
+    { label: "Izgara", file: "skara_tr.html" },
+    { label: "Ekmek & Soslar", file: "hlyab_tr.html" },
+    { label: "Tatlılar", file: "deserti_tr.html" },
+    { label: "Alkolsüz İçecekler", file: "bezalkoholni_tr.html" },
+    { label: "Alkollü İçecekler", file: "alkoholni_tr.html" },
+    { label: "Kokteyller", file: "kokteyli_tr.html" }
+  ],
+  fr: [
+    { label: "Salades", file: "salati_fr.html" },
+    { label: "Soupes / Snacks", file: "supi_fr.html" },
+    { label: "Plats principaux", file: "osnovni_fr.html" },
+    { label: "Poisson / Accompagnements", file: "riba_fr.html" },
+    { label: "Grillades", file: "skara_fr.html" },
+    { label: "Pain & Sauces", file: "hlyab_fr.html" },
+    { label: "Desserts", file: "deserti_fr.html" },
+    { label: "Boissons sans alcool", file: "bezalkoholni_fr.html" },
+    { label: "Boissons alcoolisées", file: "alkoholni_fr.html" },
+    { label: "Cocktails", file: "kokteyli_fr.html" }
+  ],
+  ru: [
+    { label: "Салаты", file: "salati_ru.html" },
+    { label: "Супы / Закуски", file: "supi_ru.html" },
+    { label: "Основные блюда", file: "osnovni_ru.html" },
+    { label: "Рыба / Гарниры", file: "riba_ru.html" },
+    { label: "Гриль", file: "skara_ru.html" },
+    { label: "Хлеб и соусы", file: "hlyab_ru.html" },
+    { label: "Десерты", file: "deserti_ru.html" },
+    { label: "Безалкогольные напитки", file: "bezalkoholni_ru.html" },
+    { label: "Алкогольные напитки", file: "alkoholni_ru.html" },
+    { label: "Коктейли", file: "kokteyli_ru.html" }
+  ]
+};
+
+function showMenu(lang) {
+  document.querySelector(".lang-select").style.display = "none";
+  const menu = document.getElementById("menu-links");
+  menu.innerHTML = "";
+  translations[lang].forEach(item => {
+    const link = document.createElement("a");
+    link.href = item.file;
+    link.innerText = item.label;
+    menu.appendChild(link);
+  });
+  menu.style.display = "flex";
+}
+</script>
+</body>
+</html>
